@@ -116,6 +116,7 @@ class viv_DeepQLearning(RL):
         
         self.optimizer.zero_grad()
         loss.backward()
+        torch.nn.utils.clip_grad_norm_(self.q_network.parameters(), max_norm=1.0) # new line
         self.optimizer.step()
 
     def execute(self, state, reward) -> int:
