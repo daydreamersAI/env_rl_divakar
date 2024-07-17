@@ -27,13 +27,14 @@ sum rate. Each cell is indexed by (col,row) as shown below:
 
 import math
 import pygame
-from   shapely.geometry import LineString, Polygon
+from shapely.geometry import LineString, Polygon
 
 from ai_base import State, Action, Pos
 from ai_random import RandomMove
 from ai_qlearning import Q_Learning
 # from ai_sarsa import SARSA
 from ai_DQN import DeepQLearning
+from vivek_dqn import viv_DeepQLearning
 
 ## switches
 SHOW_ANIMATION = 0   # 1:Yes, 0:No
@@ -43,9 +44,9 @@ EXPLORATION    = 1   # 1:Yes, 0:No more exploration, do testing
 SHOW_RATE      = 0   # 1:Yes, 0:No, showing rate on the cells
 
 SAMPLE_MODE     = 1      # 1:Yes, 0:No, to print rewards of sampled rounds only
-SAMPLE_INTERVAL = 10000  # number of interval for each sampling, in this mode, 
+# SAMPLE_INTERVAL = 10000  # number of interval for each sampling, in this mode, 
                          # during the sampling, the sim performs full exploitation
-
+SAMPLE_INTERVAL = 10
 ## stateless mode
 #SHOW_ANIMATION = 1
 #LOAD_DATA      = 0 # don't load 
@@ -478,7 +479,12 @@ def main_loop(ai):
 #ai = RandomMove()
 # ai = Q_Learning(exploration=EXPLORATION)
 #ai = SARSA(exploration=EXPLORATION)
-ai = DeepQLearning(exploration=EXPLORATION) ##### try this out 
+# ai = DeepQLearning(exploration=EXPLORATION) ##### try this out
+###########################################
+
+ai = viv_DeepQLearning(exploration=EXPLORATION) 
+##########################
+
 print(f"Runnning {ai.name} algorithm...")
 if not EXPLORATION: print("- NO exploration mode is in place")
 
