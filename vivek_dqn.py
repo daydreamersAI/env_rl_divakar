@@ -67,8 +67,8 @@ class viv_DeepQLearning(RL):
         # self.epsilon = DecayingFloat(value=0.9, factor=1.0-1e-6, minval=0.05)
         self.epsilon = DecayingFloat(value=0.9, factor=1.0-1e-5, minval=0.05) # changed the decay rate
         # self.target_update_frequency = 1000
-        # self.target_update_frequency = 100 # update lowered to 100
-        self.target_update_frequency = 10 # update lowered to 100
+        self.target_update_frequency = 100 # update lowered to 100
+        # self.target_update_frequency = 10 # update lowered to 100
         self.steps_done = 0
         
         self.current_state = None

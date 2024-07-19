@@ -440,6 +440,7 @@ def main_loop(ai):
             ## not reaching the end position at the end of the flight time?
             if STAT.step==UAV.FLIGHT_TIME and not sim.uav_pos==UAV.END_POS:
                 reward -= reward * 10 # penalty
+                # reward -= reward * 100 # penalty
 
             ## update the AI with the reward
             action = ai.execute(state,reward)
@@ -478,12 +479,12 @@ def main_loop(ai):
 
 ## choose a strategy below
 # ai = RandomMove()
-# ai = Q_Learning(exploration=EXPLORATION)
+ai = Q_Learning(exploration=EXPLORATION)
 #ai = SARSA(exploration=EXPLORATION)
 # ai = DeepQLearning(exploration=EXPLORATION) ##### try this out
 ###########################################
 
-ai = viv_DeepQLearning(exploration=EXPLORATION) 
+# ai = viv_DeepQLearning(exploration=EXPLORATION) 
 ##########################
 
 print(f"Runnning {ai.name} algorithm...")
