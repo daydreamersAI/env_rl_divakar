@@ -46,7 +46,8 @@ SHOW_RATE      = 0   # 1:Yes, 0:No, showing rate on the cells
 SAMPLE_MODE     = 1      # 1:Yes, 0:No, to print rewards of sampled rounds only
 # SAMPLE_INTERVAL = 10000  # number of interval for each sampling, in this mode, 
                          # during the sampling, the sim performs full exploitation
-SAMPLE_INTERVAL = 10
+# SAMPLE_INTERVAL = 10
+SAMPLE_INTERVAL = 100
 ## stateless mode
 #SHOW_ANIMATION = 1
 #LOAD_DATA      = 0 # don't load 
@@ -476,7 +477,7 @@ def main_loop(ai):
 #############################################
 
 ## choose a strategy below
-#ai = RandomMove()
+# ai = RandomMove()
 # ai = Q_Learning(exploration=EXPLORATION)
 #ai = SARSA(exploration=EXPLORATION)
 # ai = DeepQLearning(exploration=EXPLORATION) ##### try this out

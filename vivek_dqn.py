@@ -26,20 +26,22 @@ class DQNNetwork(nn.Module):
     #     x = torch.relu(self.fc2(x))
     #     x = self.fc3(x)
     #     return x
-    def __init__(self, input_dim, output_dim):
+    def __init__(self, input_dim, output_dim): # complexified the network 
         super(DQNNetwork, self).__init__()
         self.fc1 = nn.Linear(input_dim, 256)
         self.fc2 = nn.Linear(256, 256)
         self.fc3 = nn.Linear(256, 256)
         self.fc4 = nn.Linear(256, 128)
-        self.fc5 = nn.Linear(128, output_dim)
+        self.fc5 = nn.Linear(128, 64)
+        self.fc6 = nn.Linear(64, output_dim)
 
     def forward(self, x):
         x = torch.relu(self.fc1(x))
         x = torch.relu(self.fc2(x))
         x = torch.relu(self.fc3(x))
         x = torch.relu(self.fc4(x))
-        x = self.fc5(x)
+        x = torch.relu(self.fc5(x))
+        x = self.fc6(x)
         return x
 
 class viv_DeepQLearning(RL):
@@ -53,19 +55,20 @@ class viv_DeepQLearning(RL):
         self.target_network = DQNNetwork(self.state_dim, self.action_dim)
         self.target_network.load_state_dict(self.q_network.state_dict())
         # self.optimizer = optim.Adam(self.q_network.parameters(), lr=0.001)
-        self.optimizer = optim.Adam(self.q_network.parameters(), lr=0.001)
+        self.optimizer = optim.Adam(self.q_network.parameters(), lr=0.001) # could change the lr, didnt do much, lower the better
         self.criterion = nn.MSELoss()
         
         self.memory = []
         # self.memory_size = 10000
-        # self.batch_size = 64
-        self.memory_size = 100000
-        self.batch_size = 128
+        # self.batch_size = 64 
+        self.memory_size = 100000 # increased the memory and decreased the batch size
+        self.batch_size = 32
         self.gamma = 0.99
         # self.epsilon = DecayingFloat(value=0.9, factor=1.0-1e-6, minval=0.05)
-        self.epsilon = DecayingFloat(value=0.9, factor=1.0-1e-4, minval=0.05)
+        self.epsilon = DecayingFloat(value=0.9, factor=1.0-1e-5, minval=0.05) # changed the decay rate
         # self.target_update_frequency = 1000
-        self.target_update_frequency = 100
+        # self.target_update_frequency = 100 # update lowered to 100
+        self.target_update_frequency = 10 # update lowered to 100
         self.steps_done = 0
         
         self.current_state = None
@@ -74,7 +77,7 @@ class viv_DeepQLearning(RL):
     def store_transition(self, state, action, reward, next_state):
         if len(self.memory) >= self.memory_size:
             self.memory.pop(0)
-        reward = scale_reward(self, reward) # added
+        reward = scale_reward(self, reward) # reward scaling added added
         self.memory.append((state, action, reward, next_state))
 
     def sample_memory(self):
@@ -116,12 +119,12 @@ class viv_DeepQLearning(RL):
         
         self.optimizer.zero_grad()
         loss.backward()
-        torch.nn.utils.clip_grad_norm_(self.q_network.parameters(), max_norm=1.0) # new line
+        torch.nn.utils.clip_grad_norm_(self.q_network.parameters(), max_norm=1.0) # new line normalization
         self.optimizer.step()
 
     def execute(self, state, reward) -> int:
         if self.current_state is not None:
-            reward = scale_reward(self, reward) # added 
+            reward = scale_reward(self, reward) # reward scaling added 
             self.store_transition(self.current_state, self.current_action, reward, state)
             self.optimize_model()
             if self.steps_done % self.target_update_frequency == 0:
